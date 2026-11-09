@@ -10,9 +10,6 @@ from extract_utils.fixups_blob import (
     blob_fixup,
     blob_fixups_user_type,
 )
-from extract_utils.fixups_lib import (
-    lib_fixups,
-)
 from extract_utils.main import (
     ExtractUtils,
     ExtractUtilsModule,
@@ -28,6 +25,12 @@ namespace_imports = [
     'hardware/oplus',
     'vendor/oneplus/sm7250-common',
     'vendor/qcom/opensource/display',
+]
+
+common_module = ExtractUtils.get_module('sm7250-common', 'oneplus')
+lib_fixups = common_module.lib_fixups
+namespace_imports += [
+    name for name in common_module.namespace_imports if name not in namespace_imports
 ]
 
 def blob_fixup_nop_call(
@@ -67,6 +70,13 @@ def blob_fixup_nop_call(
         break
 
 blob_fixups: blob_fixups_user_type = {
+    ('odm/lib64/mediadrm/libwvdrmengine.so', 'odm/lib64/libwvhidl.so'): blob_fixup()
+        .add_needed('libcrypto_shim.so'),
+    'vendor/lib64/libdpps.so': blob_fixup()
+        .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
+    'vendor/lib64/libril-qc-hal-qmi.so': blob_fixup()
+        .binary_regex_replace(b'/cache/opponvitems/', b'/data/vendor/radio/')
+        .binary_regex_replace(b'/data/opponvitems/([^\x00]*)\x00', b'/data/vendor/ril/\\1\x00\x00'),
     'vendor/etc/libnfc-nci.conf': blob_fixup()
         .regex_replace('NFC_DEBUG_ENABLED=0x01', 'NFC_DEBUG_ENABLED=0x00'),
     'vendor/etc/libnfc-nxp.conf': blob_fixup()

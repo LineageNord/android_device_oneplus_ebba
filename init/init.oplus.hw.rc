@@ -9,3 +9,6 @@ on property:ro.boot.rf_version=1
 
 on property:ro.boot.rf_version=2
     setprop ro.boot.hardware.revision "IN"
+
+on post-fs-data
+    mkdir /data/vendor/ril 0770 radio radio
