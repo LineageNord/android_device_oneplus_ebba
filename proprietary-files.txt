@@ -15,6 +15,9 @@ odm/lib/rfsa/adsp/dirac.so
 odm/lib/rfsa/adsp/dirac_resource.dar
 odm/lib/rfsa/adsp/libdirac-capiv2.so
 
+# Audio firmware
+odm/firmware/tfa98xx.cnt
+
 # Camera
 odm/etc/camera/fb_default
 odm/etc/camera/fwk_config.json
